@@ -37,8 +37,37 @@ Run the following command to download godot-cpp:
 
 env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 
-env.Append(CPPPATH=["src/"])
-sources = Glob("src/*.cpp")
+# physics_anim uses exceptions
+if env.get("is_msvc", False):
+    env.Append(CXXFLAGS=["/EHsc"])
+else:
+    env.Append(CXXFLAGS=["-fexceptions"])
+
+env.Append(CPPPATH=[
+    "src/",
+    "src/simulation/",
+    "third_party/physics_anim/include/",
+    "third_party/physics_anim/things/include/"
+])
+
+env.Append(LIBS=["tbb", "gomp"])
+
+# Compile ONLY the solver/data files — NOT the thing_*.cpp or viewer files
+import fnmatch
+
+pba_base_sources = Glob("third_party/physics_anim/base/*.C")
+# Filter out GL-dependent files
+pba_base_sources = [s for s in pba_base_sources
+    if not any(x in str(s) for x in ["Viewer", "ScreenCapture", "simple_viewer"])]
+
+pba_things_sources = Glob("third_party/physics_anim/things/src/*.cpp")
+# Exclude the Thing wrappers (they have GL deps) and the sim main
+pba_things_sources = [s for s in pba_things_sources
+    if not any(x in str(s) for x in ["thing_", "pbalitesim", "MyThing"])]
+
+sources = Glob("src/*.cpp") + Glob("src/simulation/*.cpp")
+sources += pba_base_sources + pba_things_sources
+
 
 if env["target"] in ["editor", "template_debug"]:
     try:
