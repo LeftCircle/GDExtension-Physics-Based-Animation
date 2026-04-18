@@ -7,6 +7,9 @@
 
 #include "example_class.h"
 #include "pba_particle_system.h"
+#include "pba_collision_object.h"
+#include "pba_physics_server.h"
+#include "pba_solvers.h"
 
 using namespace godot;
 
@@ -16,13 +19,27 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 		return;
 	}
 	GDREGISTER_CLASS(ExampleClass);
-	GDREGISTER_CLASS(PbaParticleSystem);
+	GDREGISTER_CLASS(PBAParticleSystem);
+	GDREGISTER_CLASS(PBACollisionPlane);
+	GDREGISTER_CLASS(PBACollisionSurface);
+	GDREGISTER_CLASS(PBAAdvancePositionSolver);
+	
+	GDREGISTER_ABSTRACT_CLASS(PBACollisionObject);
+	GDREGISTER_ABSTRACT_CLASS(PBASolverBase);
+
+	GDREGISTER_ABSTRACT_CLASS(PBAPhysicsServer);
+
+	PBAPhysicsServer* server = memnew(PBAPhysicsServer);
+	Engine::get_singleton()->register_singleton("PBAPhysicsServer", server);
 }
 
 void uninitialize_gdextension_types(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
+
+	Engine::get_singleton()->unregister_singleton("PBAPhysicsServer");
+	memdelete(PBAPhysicsServer::get_singleton());
 }
 
 extern "C"

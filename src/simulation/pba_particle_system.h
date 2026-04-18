@@ -5,8 +5,8 @@
 
 using namespace godot;
 
-class PbaParticleSystem : public Node3D {
-    GDCLASS(PbaParticleSystem, Node3D)
+class PBAParticleSystem : public Node3D {
+    GDCLASS(PBAParticleSystem, Node3D)
 
 protected:
     static void _bind_methods();
@@ -16,6 +16,8 @@ public:
     void _physics_process(double delta) override;
     // a bit unfortunate that we have to transform to godot vector types here
     PackedVector3Array get_positions() const;
+    
+    pba::DSD_sp get_dsd() { return _dsd; }
 };
 
 
