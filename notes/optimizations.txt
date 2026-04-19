@@ -1,0 +1,57 @@
+Local space AABB for sph inside of a RBD:
+
+// In physics_anim, add to occupancy_volume.h or a new header:
+namespace pba {
+
+struct LocalSpaceOccupancy {
+    idx_volume_sp volume;
+    Vector origin;       // world-space origin (e.g. rigid body COM)
+    Matrix rotation;     // world-to-local rotation (e.g. transpose of rigid body angular_rotation)
+
+    Vector to_local(const Vector& world_pos) const {
+        Vector rel = world_pos - origin;
+        return rotation * rel;  // rotate into local frame
+    }
+
+    Vector to_world(const Vector& local_pos) const {
+        Matrix world_rot = rotation.transpose();
+        return (world_rot * local_pos) + origin;
+    }
+
+    // Populate using world positions, converting to local internally
+    void populate(span<const Vector> world_positions) {
+        // Build a temporary local-space position list
+        std::vector<Vector> local_positions(world_positions.size());
+        for (size_t i = 0; i < world_positions.size(); i++) {
+            local_positions[i] = to_local(world_positions[i]);
+        }
+        volume->populate(local_positions, [](std::vector<size_t>& cell, size_t idx) {
+            cell.push_back(idx);
+        });
+    }
+
+    // Update transform from rigid body each frame
+    void sync_to_rigid_body(const RigidBodyStateData& rb) {
+        origin = rb.center_of_mass;
+        rotation = rb.angular_rotation.transpose(); // world-to-local
+    }
+};
+
+} // namespace pba
+
+
+PBASolver System would then have an option for the occupancy volume to be local:
+void PBASolverSystem::step() {
+    if (_local_occupancy) {
+        // Sync the grid's transform to the rigid body
+        auto rb = std::dynamic_pointer_cast<pba::RigidBodyStateData>(_rigid_body_dsd);
+        if (rb) _local_occupancy->sync_to_rigid_body(*rb);
+
+        // Repopulate with current SPH positions (converted to local space internally)
+        auto positions = _sph_dsd->get_vector_attribute_span("position");
+        _local_occupancy->populate(positions);
+    }
+    _system->solve(1.0);
+}
+
+

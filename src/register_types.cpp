@@ -22,10 +22,8 @@ void initialize_gdextension_types(ModuleInitializationLevel p_level)
 	GDREGISTER_CLASS(PBAParticleSystem);
 	GDREGISTER_CLASS(PBACollisionPlane);
 	GDREGISTER_CLASS(PBACollisionSurface);
-	GDREGISTER_CLASS(PBAAdvancePositionSolver);
 	
 	GDREGISTER_ABSTRACT_CLASS(PBACollisionObject);
-	GDREGISTER_ABSTRACT_CLASS(PBASolverBase);
 
 	GDREGISTER_ABSTRACT_CLASS(PBAPhysicsServer);
 

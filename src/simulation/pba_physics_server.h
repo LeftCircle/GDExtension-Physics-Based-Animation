@@ -12,6 +12,7 @@
 #include "collision_handler.h"
 #include "pba_collision_object.h"
 #include "GISolver.h"
+#include "rbd_solvers.h"
 
 using namespace godot;
 
@@ -26,18 +27,18 @@ protected:
     static void _bind_methods();
     // We need a map for each particle system to the solvers that drive them
     
-    
-    
 public:
     static PBAPhysicsServer* get_singleton();
     pba::CollisionHandler_sp collision_handler = std::make_shared<pba::CollisionHandler>();
+    std::shared_ptr<pba::RBDCollisionHandler> rbd_collision_handler = std::make_shared<pba::RBDCollisionHandler>();
 
     PBAPhysicsServer();
     ~PBAPhysicsServer();
 
     void step(double delta);
     void register_collision_surface(PBACollisionSurface* cs) {
-        _coll_handler->register_collision_surface(cs->get_surface()); 
+        collision_handler->register_collision_surface(cs->get_surface());
+        rbd_collision_handler->register_collision_surface(cs->get_surface());
     }
 
     void add_particle_system();
