@@ -1,11 +1,14 @@
 #pragma once
 
 #include "godot_cpp/classes/node3d.hpp"
+
 #include "dynamical_state_data.h"
 #include "soft_body_data.h"
 #include "sph_data.h"
 #include "rigid_body.h"
 #include "boids_state_data.h"
+
+#include "pba_helpers.h"
 
 using namespace godot;
 
@@ -28,6 +31,7 @@ protected:
 public:
 
     void create(TYPE tpye, int particle_count);
+    void add_particle(Vector3 pos);
 
     void _physics_process(double delta) override;
     // a bit unfortunate that we have to transform to godot vector types here

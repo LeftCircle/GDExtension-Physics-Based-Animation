@@ -13,11 +13,13 @@
 #include "boid_solvers.h"
 #include "occupancy_volume.h"
 #include "AABB.h"
+#include "sph_kernel.h"
 
 #include "pba_helpers.h"
 #include "pba_particle_system.h"
 #include "pba_physics_server.h"
 #include "pba_forces.h"
+
 
 
 using namespace godot;
@@ -48,13 +50,12 @@ protected:
     double _dt = 0.0166667;
     pba::idx_volume_sp _occupancy_volume;
 
-    void _compose(pba::GISolver_sp a, pba::GISolver_sp b, IntegratorType);
+    void _compose(pba::GISolver_sp a, pba::GISolver_sp b, IntegratorType integ);
     
 
 public:
     void build(
         PBAParticleSystem* ps,
-        PBAForceSystem* fs,
         SolverType st,
         IntegratorType integ,
         double dt,

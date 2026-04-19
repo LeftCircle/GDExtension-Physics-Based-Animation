@@ -7,5 +7,6 @@
 
 
 
-static pba::Vector inline godot_vec_to_pba(godot::Vector3 v){ return pba::Vector(v.x, v.y, v.z); }
-static pba::Vector inline gvtpba(godot::Vector3 v) { return pba::Vector(v.x, v.y, v.z); }
+static pba::Vector inline godot_vec_to_pba(godot::Vector3 v) noexcept{ return pba::Vector(v.x, v.y, v.z); }
+static pba::Vector inline gvtpba(godot::Vector3 v) noexcept { return pba::Vector(v.x, v.y, v.z); }
+static godot::Vector3 inline pbavtg(pba::Vector v) noexcept { return godot::Vector3(v.X(), v.Y(), v.Z()); }
