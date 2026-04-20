@@ -2,13 +2,32 @@
 
 void PBASolver::_bind_methods(){
 	godot::ClassDB::bind_method(
-		D_METHOD("build", "PBAParticleSystem", "SolverType", "IntegratorType", "AABB", "cell_size"),
+		D_METHOD(
+			"build",
+			"PBAParticleSystem",
+			"SolverType",
+			"IntegratorType",
+			"delta",
+			"AABB",
+			"cell_size"
+		),
 		&PBASolver::build
 	);
+
+	BIND_ENUM_CONSTANT(PARTICLE);
+	BIND_ENUM_CONSTANT(SOFT_BODY);
+	BIND_ENUM_CONSTANT(RIGID_BODY);
+	BIND_ENUM_CONSTANT(SPH);
+	BIND_ENUM_CONSTANT(BOID);
+
+	BIND_ENUM_CONSTANT(FORWARD);
+	BIND_ENUM_CONSTANT(BACKWARD);
+	BIND_ENUM_CONSTANT(LEAP_FROG);
+	BIND_ENUM_CONSTANT(SIXTH_ORDER);
 }
 
 void PBASolver::solve(){
-
+	_solver_system->solve(_dt);
 }
 
 // TO DO -> just get rid of the force system and 
@@ -16,7 +35,7 @@ void PBASolver::solve(){
 void PBASolver::build(
 	PBAParticleSystem* ps,
 	SolverType st,
-	IntegratorType integ, 
+	IntegratorType integ,
 	double dt,
 	AABB bounds,
 	double cell_size
@@ -35,28 +54,38 @@ void PBASolver::build(
 	};
 	// TODO -> It'd be nice if we could create the solver based on the particle type
 	switch (st){
-		case PARTICLE:
+		case PARTICLE: {
+			printf("Particle solver created\n");
 			forces->add_force(std::make_shared<pba::SimpleGravityForce>(pba::Vector(0, -9.8, 0)));
 			pos_solver = std::make_shared<pba::PartialSolverAdvancePosition>(dsd, ch);
 			vel_solver = std::make_shared<pba::AdvanceVelocityWithForces>(dsd, forces);
 			break;
-		case SOFT_BODY:
+		}
+		case SOFT_BODY: {
+			printf("Soft body solver created\n");
 			forces->add_force(std::make_shared<pba::SimpleGravityForce>(pba::Vector(0, -9.8, 0)));
 			forces->add_force(std::make_shared<pba::UniformStrutForce>(1.0, 1.0));
 			pos_solver = std::make_shared<pba::PartialSolverAdvancePosition>(dsd, ch);
 			vel_solver = std::make_shared<pba::AdvanceVelocityWithForces>(dsd, forces);
 			break;
-		case BOID:
+		}
+		case BOID: {
+			printf("BOID solver created\n");
 			ov_maker(bounds, cell_size);
 			pos_solver = std::make_shared<pba::PartialSolverAdvancePosition>(dsd, ch, _occupancy_volume);
 			vel_solver = std::make_shared<pba::AdvanceBoidVelocityWithForces>(dsd, forces, _occupancy_volume);
 			break;
-		case RIGID_BODY:
+		}
+		case RIGID_BODY: {
+			printf("RBD solver created\n");
+			auto dsd_rbd = std::dynamic_pointer_cast<pba::RigidBodyStateData>(dsd);
 			forces->add_force(std::make_shared<pba::SimpleGravityForce>(pba::Vector(0, -9.8, 0)));
-			pos_solver = std::make_shared<pba::AdvanceRotationAndCOMWithCollisions>(dsd, rbd_ch);
-			vel_solver = std::make_shared<pba::AdvanceAngularVelocityAndVelocity>(dsd, forces);
+			pos_solver = std::make_shared<pba::AdvanceRotationAndCOMWithCollisions>(dsd_rbd, rbd_ch);
+			vel_solver = std::make_shared<pba::AdvanceAngularVelocityAndVelocity>(dsd_rbd, forces);
 			break;
-		case SPH:
+		}
+		case SPH:{
+			printf("SPH solver created\n");
 			forces->add_force(std::make_shared<pba::SimpleGravityForce>(pba::Vector(0, -9.8, 0)));
 			ov_maker(bounds, cell_size);
 			auto dsd_sph = std::dynamic_pointer_cast<pba::SPHData>(dsd);
@@ -64,28 +93,35 @@ void PBASolver::build(
 			pba::Kernel_sp kernel = std::make_shared<pba::SphSpikyKernel3>(h);
 			forces->add_force(std::make_shared<pba::SPHPressureForce>(_occupancy_volume, kernel));
 			forces->add_force(std::make_shared<pba::SPHPressureForce>(_occupancy_volume, kernel));
-			pos_solver = std::make_shared<pba::SPHPositionSolver>(dsd, ch, _occupancy_volume);
-			vel_solver = std::make_shared<pba::SPHAdvanceVelocityWithForces>(dsd, forces);
+			pos_solver = std::make_shared<pba::SPHPositionSolver>(dsd_sph, ch, _occupancy_volume, kernel);
+			vel_solver = std::make_shared<pba::SPHAdvanceVelocityWithForces>(dsd_sph, forces);
+			break;
+		}
 	}
 
 	_compose(pos_solver, vel_solver, integ);
+	PBAPhysicsServer::get_singleton()->register_solver(_solver_system);
 }
 
 void PBASolver::_compose(pba::GISolver_sp a, pba::GISolver_sp b, IntegratorType integ){
 	switch (integ){
-		case FORWARD:
+		case FORWARD: {
 			_solver_system = std::make_shared<pba::GISolverSystem>();
 			_solver_system->add_solver(a, _dt);
 			_solver_system->add_solver(b, _dt);
 			break;
-		case BACKWARD:
+		}
+		case BACKWARD:{
 			_solver_system = std::make_shared<pba::GISolverSystem>();
 			_solver_system->add_solver(b, _dt);
 			_solver_system->add_solver(a, _dt);
-		case LEAP_FROG:
+			break;
+		}
+		case LEAP_FROG:{
 			_solver_system = std::make_shared<pba::GISolverSystem>();
 			_solver_system->add_solver(std::make_shared<pba::GISolverLeapfrog>(a, b), _dt);
 			break;
+		}
 		case SIXTH_ORDER:
 			_solver_system = std::make_shared<pba::GISolverSystem>();
 			auto lf = std::make_shared<pba::GISolverLeapfrog>(a, b);

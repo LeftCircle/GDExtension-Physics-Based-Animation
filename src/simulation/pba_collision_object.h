@@ -26,7 +26,7 @@ class PBACollisionSurface : public RefCounted{
 
 protected:
     static void _bind_methods();
-    std::shared_ptr<pba::CollisionSurface> _cs;
+    std::shared_ptr<pba::CollisionSurface> _cs = std::make_shared<pba::CollisionSurface>();
 
 public:
     const pba::CollisionSurface_sp get_surface() const noexcept { return _cs; }

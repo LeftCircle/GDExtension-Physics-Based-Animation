@@ -1,4 +1,5 @@
 extends Node3D
+class_name PBABoxShape3D
 
 @export var shape : BoxShape3D = BoxShape3D.new()
 @export var inward_normals = false
@@ -6,9 +7,6 @@ extends Node3D
 var cs := PBACollisionSurface.new()
 
 func _ready() -> void:
-	# Just start by registering the collision shape
-	# For now let's do 3 planes
-	
 	var p = global_position
 	var top_plane_p = p + Vector3(0, shape.size.y / 2, 0)
 	var right_plane_p = p + Vector3(shape.size.x / 2, 0, 0)
@@ -26,14 +24,15 @@ func _ready() -> void:
 	top_p.init(top_plane_p, Vector3.UP * ns)
 	r_p.init(right_plane_p, Vector3.RIGHT * ns)
 	l_p.init(left_plane_p, Vector3.LEFT * ns)
-	f_p.init(top_plane_p, Vector3.FORWARD * ns)
-	back_p.init(top_plane_p, Vector3.BACK * ns)
-	bottom_p.init(top_plane_p, Vector3.DOWN * ns)
+	f_p.init(front_plane_p, Vector3.FORWARD * ns)
+	back_p.init(back_plane_p, Vector3.BACK * ns)
+	bottom_p.init(bottom_plane_p, Vector3.DOWN * ns)
 	cs.register_collision_object(top_p)
 	cs.register_collision_object(r_p)
 	cs.register_collision_object(l_p)
 	cs.register_collision_object(f_p)
 	cs.register_collision_object(back_p)
 	cs.register_collision_object(bottom_p)
+	PBAPhysicsServer.register_collision_surfaced(cs)
 	
 	

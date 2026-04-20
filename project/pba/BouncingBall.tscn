@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://cybsvotxckj3d"]
+
+[ext_resource type="PackedScene" uid="uid://d1s474e13xw8d" path="res://pba/nodes/PBA_CollisionRectangle3D.tscn" id="1_bq40h"]
+[ext_resource type="PackedScene" uid="uid://bh5kxvxeekf3b" path="res://pba/nodes/PBA_Particles.tscn" id="2_litus"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_litus"]
+size = Vector3(2, 2, 2)
+
+[node name="BouncingBall" type="Node3D" unique_id=1115393391]
+
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=829131599]
+transform = Transform3D(1, 0, 0, 0, 0.688038, 0.7256747, 0, -0.7256747, 0.688038, 0, 1.8063756, 1.7310123)
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=2064817458]
+transform = Transform3D(1, 0, 0, 0, 0.83499193, 0.55026215, 0, -0.55026215, 0.83499193, -1.1920929e-07, 1.2692144, 3.140674)
+
+[node name="PbaCollisionRectangle3d" parent="." unique_id=1533182268 instance=ExtResource("1_bq40h")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16097426, 0)
+shape = SubResource("BoxShape3D_litus")
+inward_normals = true
+
+[node name="PbaParticles" parent="." unique_id=1459520411 instance=ExtResource("2_litus")]

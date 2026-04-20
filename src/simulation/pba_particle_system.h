@@ -1,5 +1,7 @@
 #pragma once
 
+#include <algorithm>
+
 #include "godot_cpp/classes/node3d.hpp"
 
 #include "dynamical_state_data.h"
@@ -28,13 +30,17 @@ protected:
     static void _bind_methods();
     pba::DSD_sp _dsd;
 
-public:
+    TYPE _type = PARTICLES;
 
+public:
+    void set_type(TYPE t) noexcept { _type = t; }
+    TYPE get_type() const noexcept { return _type; }
+    
+    void _ready() override;
+    
     void create(TYPE tpye, int particle_count);
     void add_particle(Vector3 pos);
 
-    void _physics_process(double delta) override;
-    // a bit unfortunate that we have to transform to godot vector types here
     PackedVector3Array get_positions() const;
     
     pba::DSD_sp get_dsd() { return _dsd; }

@@ -3,7 +3,7 @@
 #include <vector>
 
 #include <godot_cpp/core/class_db.hpp>
-#include "godot_cpp/classes/object.hpp"
+#include "godot_cpp/classes/node.hpp"
 
 #include "force.h"
 #include "partial_solvers.h"
@@ -18,14 +18,15 @@ using namespace godot;
 
 
 
-class PBAPhysicsServer : public Object{
-    GDCLASS(PBAPhysicsServer, Object)
+class PBAPhysicsServer : public Node{
+    GDCLASS(PBAPhysicsServer, Node)
 
     static PBAPhysicsServer* singleton;
 
 protected:
     static void _bind_methods();
-    // We need a map for each particle system to the solvers that drive them
+    
+    std::vector<std::shared_ptr<pba::GISolverSystem>> _solvers;
     
 public:
     static PBAPhysicsServer* get_singleton();
@@ -35,12 +36,14 @@ public:
     PBAPhysicsServer();
     ~PBAPhysicsServer();
 
+   // void _physics_process(double delta) override;
+
     void step(double delta);
     void register_collision_surface(PBACollisionSurface* cs) {
         collision_handler->register_collision_surface(cs->get_surface());
         rbd_collision_handler->register_collision_surface(cs->get_surface());
     }
 
-    void add_particle_system();
-
+    // TO DO -> also delete unused solvers
+    void register_solver(std::shared_ptr<pba::GISolverSystem> solver) { _solvers.push_back(solver); }
 };

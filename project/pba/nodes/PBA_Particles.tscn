@@ -1,0 +1,17 @@
+[gd_scene format=3 uid="uid://bh5kxvxeekf3b"]
+
+[ext_resource type="Script" uid="uid://dcoeu6rrcakee" path="res://pba/nodes/pba_particles.gd" id="1_ky8pv"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_ky8pv"]
+radius = 0.25
+height = 0.5
+
+[sub_resource type="MultiMesh" id="MultiMesh_ho4qg"]
+transform_format = 1
+mesh = SubResource("SphereMesh_ky8pv")
+
+[node name="PbaParticles" type="PBAParticleSystem" unique_id=1459520411]
+script = ExtResource("1_ky8pv")
+
+[node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="." unique_id=493089331]
+multimesh = SubResource("MultiMesh_ho4qg")

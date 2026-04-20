@@ -18,3 +18,7 @@ config/name="godot cpp template"
 run/main_scene="uid://dh0oj81pufivs"
 config/features=PackedStringArray("4.6", "Forward Plus")
 config/icon="res://icon.svg"
+
+[autoload]
+
+PbaPhysicsServerDriver="*uid://gx2ud8tg4n6c"

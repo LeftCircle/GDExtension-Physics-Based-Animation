@@ -24,10 +24,11 @@ void PBAPhysicsServer::_bind_methods() {
         D_METHOD("register_collision_surfaced", "collision_surface"),
         &PBAPhysicsServer::register_collision_surface
     );
-    
 }
 
 void PBAPhysicsServer::step(double delta) {
-
+    for(auto solver : _solvers){
+        solver->solve(delta);
+    }
 }
 
