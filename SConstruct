@@ -40,8 +40,10 @@ env = SConscript("godot-cpp/SConstruct", {"env": env, "customs": customs})
 # physics_anim uses exceptions
 if env.get("is_msvc", False):
     env.Append(CXXFLAGS=["/EHsc"])
+    env.Append(CXXFLAGS=["/std:c++20"])
 else:
     env.Append(CXXFLAGS=["-fexceptions"])
+    env.Append(CXXFLAGS=["-std=c++20"])
 
 env.Append(CPPPATH=[
     "src/",

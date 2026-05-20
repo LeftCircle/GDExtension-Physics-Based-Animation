@@ -2,6 +2,11 @@
 
 [ext_resource type="Script" uid="uid://dcoeu6rrcakee" path="res://pba/nodes/pba_particles.gd" id="1_ky8pv"]
 
+[sub_resource type="PBASoftTriangle" id="PBASoftTriangle_ky8pv"]
+idxs = Vector3i(0, 1, 2)
+rest_area = 0.755
+spring_constant = 1.0
+
 [sub_resource type="SphereMesh" id="SphereMesh_ky8pv"]
 radius = 0.25
 height = 0.5
@@ -10,8 +15,13 @@ height = 0.5
 transform_format = 1
 mesh = SubResource("SphereMesh_ky8pv")
 
-[node name="PbaParticles" type="PBAParticleSystem" unique_id=1459520411]
+[node name="PbaParticles" type="PBAParticleSystem" unique_id=1459520411 node_paths=PackedStringArray("initial_particle_container")]
+type = 1
+soft_triangles = Array[PBASoftTriangle]([SubResource("PBASoftTriangle_ky8pv")])
 script = ExtResource("1_ky8pv")
+initial_particle_container = NodePath("InitialParticles")
 
 [node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="." unique_id=493089331]
 multimesh = SubResource("MultiMesh_ho4qg")
+
+[node name="InitialParticles" type="Node3D" parent="." unique_id=436570243]

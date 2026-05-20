@@ -21,7 +21,7 @@ PBAPhysicsServer::~PBAPhysicsServer() {
 void PBAPhysicsServer::_bind_methods() {
     ClassDB::bind_method(D_METHOD("step", "delta"), &PBAPhysicsServer::step);
     ClassDB::bind_method(
-        D_METHOD("register_collision_surfaced", "collision_surface"),
+        D_METHOD("register_collision_surface", "collision_surface"),
         &PBAPhysicsServer::register_collision_surface
     );
 }

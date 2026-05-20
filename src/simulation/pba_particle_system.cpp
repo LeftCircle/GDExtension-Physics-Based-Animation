@@ -8,6 +8,9 @@ void PBAParticleSystem::_bind_methods() {
 
     ClassDB::bind_method(D_METHOD("set_type", "type"), &PBAParticleSystem::set_type);
     ClassDB::bind_method(D_METHOD("get_type"), &PBAParticleSystem::get_type);
+    ClassDB::bind_method(D_METHOD("set_soft_triangles", "soft_tris"), &PBAParticleSystem::set_soft_triangles);
+    ClassDB::bind_method(D_METHOD("get_soft_triangles"), &PBAParticleSystem::get_soft_triangles);
+    ClassDB::bind_method(D_METHOD("sync_soft_triangles_at_runtime"), &PBAParticleSystem::sync_soft_triangles_at_runtime);
 
     BIND_ENUM_CONSTANT(PARTICLES);
     BIND_ENUM_CONSTANT(SOFT_BODY);
@@ -16,6 +19,30 @@ void PBAParticleSystem::_bind_methods() {
     BIND_ENUM_CONSTANT(BOIDS);
 
     ADD_PROPERTY(PropertyInfo(Variant::INT, "type", PROPERTY_HINT_ENUM, "Particles,Soft Body,Rigid Body,SPH,Boids"), "set_type", "get_type");
+    ADD_PROPERTY(
+        PropertyInfo(
+            Variant::ARRAY,
+            "soft_triangles",
+            PROPERTY_HINT_ARRAY_TYPE,
+            "PBASoftTriangle"
+        ),
+        "set_soft_triangles", "get_soft_triangles"
+    );
+
+}
+
+void PBAParticleSystem::_validate_property(PropertyInfo &p_property) const {
+    String name = p_property.name;
+    // Test hiding the "mouse_filter" property from the editor.
+    if (name == "soft_triangles" && _type != SOFT_BODY) {
+        p_property.usage = PROPERTY_USAGE_NO_EDITOR;
+    }
+}
+
+void PBAParticleSystem::set_type(TYPE t) noexcept {
+    if (_type == t) return;
+    _type = t;
+    notify_property_list_changed();
 }
 
 void PBAParticleSystem::_ready(){
@@ -47,6 +74,29 @@ void PBAParticleSystem::create(TYPE type, int n_particles){
         }
     }
     _dsd->add(n_particles);
+}
+
+void PBAParticleSystem::sync_soft_triangles_at_runtime() {
+    auto sb = std::dynamic_pointer_cast<pba::SoftBody>(_dsd);
+    if (!sb) return;
+
+    sb->soft_triangles.clear();
+    for (int i = 0; i < soft_triangles.size(); i++){
+        Ref<PBASoftTriangle> tri = soft_triangles[i];
+        double current_area = pba::Triangle::get_area(
+            sb->p(tri->get_idxs()[0]),
+            sb->p(tri->get_idxs()[1]),
+            sb->p(tri->get_idxs()[2])
+        );
+        double area = tri->get_area() == 0 ? current_area : tri->get_area();
+        sb->soft_triangles.emplace_back(
+            tri->get_idxs()[0],
+            tri->get_idxs()[1],
+            tri->get_idxs()[2],
+            area, 
+            tri->get_k()
+        );
+    }
 }
 
 void PBAParticleSystem::add_particle(Vector3 pos){

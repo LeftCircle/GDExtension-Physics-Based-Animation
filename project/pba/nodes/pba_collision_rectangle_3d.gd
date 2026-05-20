@@ -33,6 +33,6 @@ func _ready() -> void:
 	cs.register_collision_object(f_p)
 	cs.register_collision_object(back_p)
 	cs.register_collision_object(bottom_p)
-	PBAPhysicsServer.register_collision_surfaced(cs)
+	PBAPhysicsServer.register_collision_surface(cs)
 	
 	

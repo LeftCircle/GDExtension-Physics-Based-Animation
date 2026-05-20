@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 
 #include "godot_cpp/classes/resource.hpp"
 #include "godot_cpp/variant/vector3.hpp"
@@ -7,6 +8,7 @@
 #include "force.h"
 #include "force_library.h"
 #include "pba_helpers.h"
+
 
 using namespace godot;
 
@@ -22,3 +24,26 @@ public:
     void add_gravity(Vector3 g);
 
 };
+
+
+class PBAForce : public Resource{
+    GDCLASS(PBAForce, Resource)
+
+public:
+    enum TYPE{
+        SOFT_TRIANGLE
+    };
+
+protected:
+    static void _bind_methods();
+
+    TYPE _type;
+
+public:
+    TYPE get_type() const noexcept { return _type; }
+    void set_type(TYPE t) noexcept { _type = t; }
+
+    pba::Force_sp get_pba_force();
+};
+
+VARIANT_ENUM_CAST(PBAForce::TYPE);

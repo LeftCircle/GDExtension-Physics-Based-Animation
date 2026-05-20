@@ -51,6 +51,7 @@ protected:
     pba::idx_volume_sp _occupancy_volume;
 
     void _compose(pba::GISolver_sp a, pba::GISolver_sp b, IntegratorType integ);
+    TypedArray<PBAForce> _forces;
     
 
 public:
@@ -59,46 +60,19 @@ public:
         SolverType st,
         IntegratorType integ,
         double dt,
+        TypedArray<PBAForce> forces,
         AABB bounds = AABB(Vector3(0, 0, 0), Vector3(0, 0, 0)),
         double cell_size = 1.0
     );
 
     void solve();
+
+    void set_forces(const TypedArray<PBAForce> &forces) { _forces = forces; }
+    TypedArray<PBAForce> get_forces() { return _forces; }
 };
 
 VARIANT_ENUM_CAST(PBASolver::IntegratorType);
 VARIANT_ENUM_CAST(PBASolver::SolverType);
-
-// class PBASolverBase : public Resource{
-//     GDCLASS(PBASolverBase, Resource)
-
-// protected:
-//     pba::GISolver_sp _solver;
-
-// public:
-//     pba::GISolver_sp get_solver() { return _solver; }  
-// };
-
-
-// class PBAAdvancePositionSolver : public PBASolverBase{
-//     GDCLASS(PBAAdvancePositionSolver, PBASolverBase)
-
-// protected:
-//     static void _bind_methods();
-
-// public:
-//     void init(PBAParticleSystem* particles);
-// };
-
-// class PBAAdvanceVelocityWithForces : public PBASolverBase{
-//     GDCLASS(PBAAdvanceVelocityWithForces, PBASolverBase)
-
-// protected:
-//     static void _bind_methods();
-    
-// public:
-//     void init(PBAParticleSystem* particles, PBAForceSystem* force_system);
-// };
 
 
 

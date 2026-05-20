@@ -2,6 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://d1s474e13xw8d" path="res://pba/nodes/PBA_CollisionRectangle3D.tscn" id="1_bq40h"]
 [ext_resource type="PackedScene" uid="uid://bh5kxvxeekf3b" path="res://pba/nodes/PBA_Particles.tscn" id="2_litus"]
+[ext_resource type="PackedScene" uid="uid://csg8tdn47slic" path="res://pba/nodes/helpers/placement_particle.tscn" id="3_0n1wl"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_litus"]
 size = Vector3(2, 2, 2)
@@ -12,7 +13,7 @@ size = Vector3(2, 2, 2)
 transform = Transform3D(1, 0, 0, 0, 0.688038, 0.7256747, 0, -0.7256747, 0.688038, 0, 1.8063756, 1.7310123)
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=2064817458]
-transform = Transform3D(1, 0, 0, 0, 0.83499193, 0.55026215, 0, -0.55026215, 0.83499193, -1.1920929e-07, 1.2692144, 3.140674)
+transform = Transform3D(1, 0, 0, 0, 0.834992, 0.5502622, 0, -0.5502622, 0.834992, 0.72670686, 3.9932926, 6.600138)
 
 [node name="PbaCollisionRectangle3d" parent="." unique_id=1533182268 instance=ExtResource("1_bq40h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.16097426, 0)
@@ -20,3 +21,15 @@ shape = SubResource("BoxShape3D_litus")
 inward_normals = true
 
 [node name="PbaParticles" parent="." unique_id=1459520411 instance=ExtResource("2_litus")]
+soft_triangles = Array[PBASoftTriangle]([])
+
+[node name="PlacementParticle" parent="PbaParticles/InitialParticles" parent_id_path=PackedInt32Array(1459520411, 436570243) index="0" unique_id=702263114 instance=ExtResource("3_0n1wl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.9636238, 0.605, 0)
+
+[node name="PlacementParticle2" parent="PbaParticles/InitialParticles" parent_id_path=PackedInt32Array(1459520411, 436570243) index="1" unique_id=620759766 instance=ExtResource("3_0n1wl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.177387, 0.605, 0)
+
+[node name="PlacementParticle3" parent="PbaParticles/InitialParticles" parent_id_path=PackedInt32Array(1459520411, 436570243) index="2" unique_id=318759989 instance=ExtResource("3_0n1wl")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.27925754, 0.605, -3.4246492)
+
+[editable path="PbaParticles"]
