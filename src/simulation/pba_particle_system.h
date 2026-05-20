@@ -35,7 +35,7 @@ protected:
     
     TYPE _type = PARTICLES;
     
-    public:
+public:
     TYPE get_type() const noexcept { return _type; }
     PackedVector3Array get_positions() const;
     pba::DSD_sp get_dsd() { return _dsd; }
