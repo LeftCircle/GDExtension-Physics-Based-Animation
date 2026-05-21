@@ -5,3 +5,4 @@
 [submodule "third_party/physics_anim"]
 	path = third_party/physics_anim
 	url = https://github.com/LeftCircle/DPA_PhysicsBasedAnimation.git
+	branch = main
