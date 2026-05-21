@@ -36,10 +36,16 @@ func _physics_process(delta):
 		var t = Transform3D(Basis(), positions[i])
 		mesh.multimesh.set_instance_transform(i, t)
 	$"../Visualizers/VectorVisualizer".clear()
+	$"../Visualizers/VectorVisualizer".size_multimesh(3)
 	for force : PBAForce in forces_to_add:
 		var acc = force.get_accelerations(self)
 		for i in range(positions.size()):
 			$"../Visualizers/VectorVisualizer".draw(positions[i], positions[i] + acc[i])
+			if i == 0:
+				$"../Visualizers/VectorVisualizer".draw_arrow(positions[i], positions[i] + acc[i])
+			$"../Visualizers/VectorVisualizer".draw_multi_mesh(positions[i], positions[i] + acc[i], i)
+			
+				
 			
 
 
