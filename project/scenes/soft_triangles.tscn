@@ -1,7 +1,10 @@
 [gd_scene format=3 uid="uid://ddnyqraypjmtr"]
 
+[ext_resource type="Script" uid="uid://bun38rgy28u6i" path="res://scenes/soft_triangles.gd" id="1_i8wtr"]
 [ext_resource type="PackedScene" uid="uid://bh5kxvxeekf3b" path="res://pba/nodes/PBA_Particles.tscn" id="2_sfrsu"]
 [ext_resource type="PackedScene" uid="uid://csg8tdn47slic" path="res://pba/nodes/helpers/placement_particle.tscn" id="3_i8wtr"]
+[ext_resource type="Script" uid="uid://delk0eun4ak5n" path="res://pba/resources/force_visualizer.gd" id="3_lfdpn"]
+[ext_resource type="PackedScene" uid="uid://dagff4e6sdy2b" path="res://scenes/visualizers/vector_visualizer.tscn" id="4_sfrsu"]
 
 [sub_resource type="PBASoftTriangle" id="PBASoftTriangle_2v0h5"]
 idxs = Vector3i(0, 1, 2)
@@ -11,7 +14,11 @@ spring_constant = 0.27
 [sub_resource type="PBAForce" id="PBAForce_2v0h5"]
 type = 0
 
+[sub_resource type="PBAForce" id="PBAForce_lfdpn"]
+type = 0
+
 [node name="SoftTriangles" type="Node3D" unique_id=1799999772]
+script = ExtResource("1_i8wtr")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=1156217947]
 transform = Transform3D(1, 0, 0, 0, 0.688038, 0.7256747, 0, -0.7256747, 0.688038, 0, 1.8063756, 1.7310123)
@@ -31,5 +38,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.177387, 0.605, 0)
 
 [node name="PlacementParticle3" parent="PbaParticles/InitialParticles" parent_id_path=PackedInt32Array(1459520411, 436570243) index="2" unique_id=1737513185 instance=ExtResource("3_i8wtr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.27925754, 0.605, -3.4246492)
+
+[node name="ForceVisualizer" type="Node" parent="." unique_id=473518710]
+script = ExtResource("3_lfdpn")
+force = SubResource("PBAForce_lfdpn")
+indices = Array[int]([0, 1, 2])
+metadata/_custom_type_script = "uid://delk0eun4ak5n"
+
+[node name="Visualizers" type="Node3D" parent="." unique_id=1634274435]
+
+[node name="VectorVisualizer" parent="Visualizers" unique_id=353809444 instance=ExtResource("4_sfrsu")]
 
 [editable path="PbaParticles"]

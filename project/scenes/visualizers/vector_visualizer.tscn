@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://dagff4e6sdy2b"]
+
+[ext_resource type="Script" uid="uid://dxys2qbinqvld" path="res://scenes/visualizers/vector_visualizer.gd" id="1_ppf6w"]
+
+[sub_resource type="ImmediateMesh" id="ImmediateMesh_usbug"]
+
+[node name="VectorVisualizer" type="Node3D" unique_id=353809444]
+script = ExtResource("1_ppf6w")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="." unique_id=817576354]
+mesh = SubResource("ImmediateMesh_usbug")

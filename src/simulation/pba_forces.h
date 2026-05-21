@@ -8,7 +8,7 @@
 #include "force.h"
 #include "force_library.h"
 #include "pba_helpers.h"
-
+#include "pba_particle_system.h"
 
 using namespace godot;
 
@@ -43,7 +43,8 @@ public:
     TYPE get_type() const noexcept { return _type; }
     void set_type(TYPE t) noexcept { _type = t; }
 
-    pba::Force_sp get_pba_force();
+    pba::Force_sp get_pba_force() const;
+    TypedArray<godot::Vector3> get_accelerations(PBAParticleSystem* ps) const;
 };
 
 VARIANT_ENUM_CAST(PBAForce::TYPE);

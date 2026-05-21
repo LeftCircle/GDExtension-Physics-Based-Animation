@@ -35,6 +35,12 @@ func _physics_process(delta):
 	for i in positions.size():
 		var t = Transform3D(Basis(), positions[i])
 		mesh.multimesh.set_instance_transform(i, t)
+	$"../Visualizers/VectorVisualizer".clear()
+	for force : PBAForce in forces_to_add:
+		var acc = force.get_accelerations(self)
+		for i in range(positions.size()):
+			$"../Visualizers/VectorVisualizer".draw(positions[i], positions[i] + acc[i])
+			
 
 
 func _add_initial_particles() -> void:
