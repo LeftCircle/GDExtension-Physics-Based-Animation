@@ -30,7 +30,26 @@ public:
 
     void set_spring_constant(double k) { _k = k; }
     double get_k() { return _k; }
+};
 
+class PBAEdge : public Resource{
+    GDCLASS(PBAEdge, Resource)
+
+protected:
+    static void _bind_methods();
+    Vector2i _idxs;
+    float _rest_length;
+    double _k;
+
+public:
+    void set_idxs(Vector2i idxs) {_idxs = idxs; }
+    Vector2i get_idxs() { return _idxs; }
+    
+    void set_rest_length(double rl) { _rest_length = rl; }
+    double get_rest_length() { return _rest_length; }
+
+    void set_spring_constant(double k) { _k = k; }
+    double get_k() { return _k; }
 };
 
 

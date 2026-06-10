@@ -39,4 +39,6 @@ func draw_arrow(p0 : Vector3, p1 : Vector3) -> void:
 	$Pivot/Body.mesh.height = p0.distance_to(p1)
 	$Pivot/Body.global_position = p0 + (p1 - p0) / 2.0
 	$Pivot/HeadStart.global_position = p1
+	$Arrow3D.global_position = p0
+	$Arrow3D.arrow_size = p0.distance_to(p1)
 	

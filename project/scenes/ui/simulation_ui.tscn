@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://ch7kr3s035utw"]
+
+[ext_resource type="Script" uid="uid://bt21mvxkxiic6" path="res://scenes/ui/simulation_ui.gd" id="1_5h32y"]
+
+[node name="SimulationUi" type="Control" unique_id=2064579202]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 1
+script = ExtResource("1_5h32y")
+
+[node name="PauseButton" type="Button" parent="." unique_id=65915322]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.017361112
+anchor_top = 0.8888889
+anchor_right = 0.068833336
+anchor_bottom = 0.9768889
+offset_right = -4.2960014
+offset_bottom = -0.02400589
+toggle_mode = true
+text = "pause"
+metadata/_edit_use_anchors_ = true
+
+[node name="StepForwardButton" type="Button" parent="." unique_id=1169955361]
+layout_mode = 1
+anchors_preset = -1
+anchor_left = 0.9001736
+anchor_top = 0.91049385
+anchor_right = 0.93707645
+anchor_bottom = 0.9585432
+offset_right = -0.51208496
+offset_bottom = -0.13598633
+text = "step
+"
+metadata/_edit_use_anchors_ = true
+
+[connection signal="toggled" from="PauseButton" to="." method="_on_pause_button_toggled"]
+[connection signal="pressed" from="StepForwardButton" to="." method="_on_step_forward_button_pressed"]

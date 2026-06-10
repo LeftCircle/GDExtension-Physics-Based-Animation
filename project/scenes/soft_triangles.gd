@@ -1,11 +1,11 @@
 extends Node3D
 
+@onready var physics_dt = ProjectSettings.get_setting("physics/common/physics_ticks_per_second") / 60.0
 
-# Called when the node enters the scene tree for the first time.
-func _ready() -> void:
-	pass # Replace with function body.
+func _on_simulation_ui_paused(status: bool) -> void:
+	print("Paused = ", status)
+	PbaPhysicsServerDriver.set_physics_process(!status)
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
+func _on_simulation_ui_step(amount: int) -> void:
+	PBAPhysicsServer.step(amount * physics_dt)

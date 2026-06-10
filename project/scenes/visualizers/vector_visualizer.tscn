@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://dagff4e6sdy2b"]
 
 [ext_resource type="Script" uid="uid://dxys2qbinqvld" path="res://scenes/visualizers/vector_visualizer.gd" id="1_ppf6w"]
+[ext_resource type="Script" uid="uid://guxue86810g0" path="res://addons/arrow3d/arrow_3d.gd" id="2_d5dil"]
 
 [sub_resource type="ImmediateMesh" id="ImmediateMesh_usbug"]
 
@@ -22,6 +23,8 @@ height = 1.0
 [sub_resource type="MultiMesh" id="MultiMesh_b2ym2"]
 transform_format = 1
 mesh = SubResource("CylinderMesh_hbba3")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hbba3"]
 
 [node name="VectorVisualizer" type="Node3D" unique_id=353809444]
 script = ExtResource("1_ppf6w")
@@ -50,3 +53,10 @@ skeleton = NodePath("../../..")
 
 [node name="MultiMeshInstance3D" type="MultiMeshInstance3D" parent="Node" unique_id=1702736584]
 multimesh = SubResource("MultiMesh_b2ym2")
+
+[node name="Arrow3D" type="Marker3D" parent="." unique_id=69867553]
+gizmo_extents = 0.0
+script = ExtResource("2_d5dil")
+arrow_material = SubResource("StandardMaterial3D_hbba3")
+opposite_direction = true
+metadata/_custom_type_script = "uid://guxue86810g0"

@@ -1,0 +1,93 @@
+[gd_scene format=3 uid="uid://b3emo5syudobx"]
+
+[ext_resource type="Script" uid="uid://yufklofcoohk" path="res://scenes/helpers/transform_handles.gd" id="1_06il8"]
+[ext_resource type="Script" uid="uid://guxue86810g0" path="res://addons/arrow3d/arrow_3d.gd" id="1_55obf"]
+[ext_resource type="Script" uid="uid://8vqr0fime8e6" path="res://scenes/helpers/directional_area.gd" id="3_wsn8p"]
+[ext_resource type="Script" uid="uid://e3f1ox6y6cvg" path="res://addons/Gizmo3DScript/gizmo3D.gd" id="4_4ar6r"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_06il8"]
+resource_local_to_scene = true
+albedo_color = Color(1, 0.31764707, 0, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_wsn8p"]
+resource_local_to_scene = true
+size = Vector3(0.9306946, 0.14971924, 0.12402344)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wsn8p"]
+albedo_color = Color(0.3019608, 1, 0, 1)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_55obf"]
+albedo_color = Color(0, 0.5019608, 1, 1)
+
+[node name="TransformHandles" type="Node3D" unique_id=684282096]
+transform = Transform3D(0.886906, 0, -0.46194983, 0, 1, 0, 0.46194983, 0, 0.886906, 0, 0, 0)
+script = ExtResource("1_06il8")
+
+[node name="Arrow3DX" type="Marker3D" parent="." unique_id=24880527]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 0, 0, 0)
+visible = false
+gizmo_extents = 0.0
+script = ExtResource("1_55obf")
+arrow_material = SubResource("StandardMaterial3D_06il8")
+metadata/_custom_type_script = "uid://guxue86810g0"
+metadata/_edit_lock_ = true
+
+[node name="Area3D" type="Area3D" parent="Arrow3DX" unique_id=1026856047]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+script = ExtResource("3_wsn8p")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Arrow3DX/Area3D" unique_id=558510519]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47807312, 0.0074462593, 0.0063476563)
+shape = SubResource("BoxShape3D_wsn8p")
+
+[node name="Arrow3DY" type="Marker3D" parent="." unique_id=810267243]
+transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 0, 0)
+visible = false
+gizmo_extents = 0.0
+script = ExtResource("1_55obf")
+arrow_material = SubResource("StandardMaterial3D_wsn8p")
+metadata/_custom_type_script = "uid://guxue86810g0"
+metadata/_edit_lock_ = true
+
+[node name="Area3D" type="Area3D" parent="Arrow3DY" unique_id=420061647]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+script = ExtResource("3_wsn8p")
+direction = Vector3(1, 1, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Arrow3DY/Area3D" unique_id=1010538588]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47807312, 0.0074462593, 0.0063476563)
+shape = SubResource("BoxShape3D_wsn8p")
+
+[node name="Arrow3DZ" type="Marker3D" parent="." unique_id=954342666]
+visible = false
+gizmo_extents = 0.0
+script = ExtResource("1_55obf")
+arrow_material = SubResource("StandardMaterial3D_55obf")
+metadata/_custom_type_script = "uid://guxue86810g0"
+metadata/_edit_lock_ = true
+
+[node name="Area3D" type="Area3D" parent="Arrow3DZ" unique_id=1850882869]
+transform = Transform3D(-4.371139e-08, 0, -1, 0, 1, 0, 1, 0, -4.371139e-08, 0, 0, 0)
+script = ExtResource("3_wsn8p")
+direction = Vector3(1, 0, 1)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Arrow3DZ/Area3D" unique_id=1778792567]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.47807312, 0.0074462593, 0.0063476563)
+shape = SubResource("BoxShape3D_wsn8p")
+
+[node name="RemoteTransform3D" type="RemoteTransform3D" parent="." unique_id=285645867]
+
+[node name="Node2D" type="Node2D" parent="." unique_id=1629968052]
+
+[node name="Node" type="Node" parent="." unique_id=1882787991]
+
+[node name="Camera3D" type="Camera3D" parent="Node" unique_id=207296463]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1.971338)
+
+[node name="Gizmo3D" type="Node3D" parent="." unique_id=502273433]
+script = ExtResource("4_4ar6r")
+metadata/_custom_type_script = "uid://e3f1ox6y6cvg"
+
+[connection signal="selected" from="Arrow3DX/Area3D" to="." method="_on_area_3d_selected"]
+[connection signal="selected" from="Arrow3DY/Area3D" to="." method="_on_area_3d_selected"]
+[connection signal="selected" from="Arrow3DZ/Area3D" to="." method="_on_area_3d_selected"]

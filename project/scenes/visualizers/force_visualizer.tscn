@@ -1,0 +1,18 @@
+[gd_scene format=3 uid="uid://b5h0ycr5snsla"]
+
+[sub_resource type="GDScript" id="GDScript_cy4mo"]
+script/source = "extends Node3D
+class_name ForceVisualizer
+
+var particle_system : PBAParticleSystem
+var force_to_visualize : PBAForce
+
+
+func init(ps : PBAParticleSystem, force : PBAForce) -> void:
+	particle_system = ps
+	force_to_visualize = force
+	# Now spawn arrows for each one. 
+"
+
+[node name="ForceVisualizer" type="Node3D" unique_id=755314523]
+script = SubResource("GDScript_cy4mo")

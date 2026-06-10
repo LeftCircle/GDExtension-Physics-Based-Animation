@@ -3,13 +3,15 @@
 [ext_resource type="Script" uid="uid://bun38rgy28u6i" path="res://scenes/soft_triangles.gd" id="1_i8wtr"]
 [ext_resource type="PackedScene" uid="uid://bh5kxvxeekf3b" path="res://pba/nodes/PBA_Particles.tscn" id="2_sfrsu"]
 [ext_resource type="PackedScene" uid="uid://csg8tdn47slic" path="res://pba/nodes/helpers/placement_particle.tscn" id="3_i8wtr"]
-[ext_resource type="Script" uid="uid://delk0eun4ak5n" path="res://pba/resources/force_visualizer.gd" id="3_lfdpn"]
-[ext_resource type="PackedScene" uid="uid://dagff4e6sdy2b" path="res://scenes/visualizers/vector_visualizer.tscn" id="4_sfrsu"]
+[ext_resource type="Script" uid="uid://delk0eun4ak5n" path="res://scenes/visualizers/force_visualizer.gd" id="3_lfdpn"]
+[ext_resource type="PackedScene" uid="uid://ch7kr3s035utw" path="res://scenes/ui/simulation_ui.tscn" id="5_i8wtr"]
+[ext_resource type="Script" uid="uid://e3f1ox6y6cvg" path="res://addons/Gizmo3DScript/gizmo3D.gd" id="6_d5vig"]
+[ext_resource type="Script" uid="uid://crqb58yi87xvf" path="res://scenes/gizmo_controller.gd" id="7_pbr53"]
 
 [sub_resource type="PBASoftTriangle" id="PBASoftTriangle_2v0h5"]
 idxs = Vector3i(0, 1, 2)
-rest_area = 0.135
-spring_constant = 0.27
+rest_area = 5.635
+spring_constant = 1.0
 
 [sub_resource type="PBAForce" id="PBAForce_2v0h5"]
 type = 0
@@ -26,8 +28,9 @@ transform = Transform3D(1, 0, 0, 0, 0.688038, 0.7256747, 0, -0.7256747, 0.688038
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1320257825]
 transform = Transform3D(1, 0, 0, 0, 0.834992, 0.5502622, 0, -0.5502622, 0.834992, 0.72670686, 3.9932926, 6.600138)
 
-[node name="PbaParticles" parent="." unique_id=1459520411 instance=ExtResource("2_sfrsu")]
+[node name="PbaParticles" parent="." unique_id=1459520411 node_paths=PackedStringArray("interaction_container") instance=ExtResource("2_sfrsu")]
 soft_triangles = Array[PBASoftTriangle]([SubResource("PBASoftTriangle_2v0h5")])
+interaction_container = NodePath("../InteractionAreas")
 forces_to_add = Array[PBAForce]([SubResource("PBAForce_2v0h5")])
 
 [node name="PlacementParticle" parent="PbaParticles/InitialParticles" parent_id_path=PackedInt32Array(1459520411, 436570243) index="0" unique_id=702263114 instance=ExtResource("3_i8wtr")]
@@ -39,14 +42,28 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.177387, 0.605, 0)
 [node name="PlacementParticle3" parent="PbaParticles/InitialParticles" parent_id_path=PackedInt32Array(1459520411, 436570243) index="2" unique_id=1737513185 instance=ExtResource("3_i8wtr")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.27925754, 0.605, -3.4246492)
 
-[node name="ForceVisualizer" type="Node" parent="." unique_id=473518710]
+[node name="ForceVisualizer" type="Node" parent="." unique_id=473518710 node_paths=PackedStringArray("particle_system")]
 script = ExtResource("3_lfdpn")
 force = SubResource("PBAForce_lfdpn")
 indices = Array[int]([0, 1, 2])
+particle_system = NodePath("../PbaParticles")
+arrow_thickness = 0.15
 metadata/_custom_type_script = "uid://delk0eun4ak5n"
 
-[node name="Visualizers" type="Node3D" parent="." unique_id=1634274435]
+[node name="SimulationUi" parent="." unique_id=2064579202 instance=ExtResource("5_i8wtr")]
 
-[node name="VectorVisualizer" parent="Visualizers" unique_id=353809444 instance=ExtResource("4_sfrsu")]
+[node name="InteractionAreas" type="Node3D" parent="." unique_id=605672826]
+
+[node name="Gizmo3D" type="Node3D" parent="." unique_id=1284881047]
+script = ExtResource("6_d5vig")
+metadata/_custom_type_script = "uid://e3f1ox6y6cvg"
+
+[node name="GizmoController" type="Node3D" parent="." unique_id=1016868909 node_paths=PackedStringArray("gizmo", "camera")]
+script = ExtResource("7_pbr53")
+gizmo = NodePath("../Gizmo3D")
+camera = NodePath("../Camera3D")
+
+[connection signal="paused" from="SimulationUi" to="." method="_on_simulation_ui_paused"]
+[connection signal="step" from="SimulationUi" to="." method="_on_simulation_ui_step"]
 
 [editable path="PbaParticles"]

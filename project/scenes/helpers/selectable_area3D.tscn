@@ -1,0 +1,14 @@
+[gd_scene format=3 uid="uid://bmokkdl5vp5yq"]
+
+[ext_resource type="Script" uid="uid://dk4726v2g67w2" path="res://scenes/helpers/SelectableParticleArea.gd" id="1_6pqln"]
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_oi5sv"]
+resource_local_to_scene = true
+
+[node name="SelectableParticleArea" type="Node3D" unique_id=468337907]
+script = ExtResource("1_6pqln")
+
+[node name="StaticBody3D" type="StaticBody3D" parent="." unique_id=1510841895]
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=1874744936]
+shape = SubResource("SphereShape3D_oi5sv")

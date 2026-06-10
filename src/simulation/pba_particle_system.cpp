@@ -3,14 +3,18 @@
 
 void PBAParticleSystem::_bind_methods() {
 	godot::ClassDB::bind_method(D_METHOD("get_positions"), &PBAParticleSystem::get_positions);
+    ClassDB::bind_method(D_METHOD("set_position", "index", "position"), &PBAParticleSystem::set_position);
     godot::ClassDB::bind_method(D_METHOD("add_particle", "position"), &PBAParticleSystem::add_particle);
     godot::ClassDB::bind_method(D_METHOD("create", "solver type", "n_particles"), &PBAParticleSystem::create);
 
     ClassDB::bind_method(D_METHOD("set_type", "type"), &PBAParticleSystem::set_type);
     ClassDB::bind_method(D_METHOD("get_type"), &PBAParticleSystem::get_type);
     ClassDB::bind_method(D_METHOD("set_soft_triangles", "soft_tris"), &PBAParticleSystem::set_soft_triangles);
+    ClassDB::bind_method(D_METHOD("set_edges", "edges"), &PBAParticleSystem::set_edges);
     ClassDB::bind_method(D_METHOD("get_soft_triangles"), &PBAParticleSystem::get_soft_triangles);
-    ClassDB::bind_method(D_METHOD("sync_soft_triangles_at_runtime"), &PBAParticleSystem::sync_soft_triangles_at_runtime);
+    ClassDB::bind_method(D_METHOD("get_edges"), &PBAParticleSystem::get_edges);
+    ClassDB::bind_method(D_METHOD("runtime_sync"), &PBAParticleSystem::runtime_sync);
+
 
     BIND_ENUM_CONSTANT(PARTICLES);
     BIND_ENUM_CONSTANT(SOFT_BODY);
@@ -76,6 +80,11 @@ void PBAParticleSystem::create(TYPE type, int n_particles){
     _dsd->add(n_particles);
 }
 
+void PBAParticleSystem::runtime_sync() {
+    sync_soft_triangles_at_runtime();
+    _sync_edges_at_runtime();
+}
+
 void PBAParticleSystem::sync_soft_triangles_at_runtime() {
     auto sb = std::dynamic_pointer_cast<pba::SoftBody>(_dsd);
     if (!sb) return;
@@ -99,9 +108,26 @@ void PBAParticleSystem::sync_soft_triangles_at_runtime() {
     }
 }
 
+void PBAParticleSystem::_sync_edges_at_runtime() {
+    auto sb = std::dynamic_pointer_cast<pba::SoftBody>(_dsd);
+    if (!sb) return;
+
+    sb->edges.clear();
+    for (int i = 0; i < edges.size(); i++){
+        Ref<PBAEdge> e = edges[i];
+        double rl = (sb->p(e->get_idxs()[0]) - sb->p(e->get_idxs()[1])).magnitude();
+        rl = e->get_rest_length() == 0 ? rl : e->get_rest_length();
+        sb->edges.emplace_back(e->get_idxs()[0], e->get_idxs()[1], rl);
+    }
+}
+
 void PBAParticleSystem::add_particle(Vector3 pos){
     _dsd->add();
     _dsd->set_position(_dsd->n_particles() - 1, gvtpba(pos));
+}
+
+void PBAParticleSystem::set_position(int i, Vector3 pos){
+    _dsd->set_position(i, gvtpba(pos));
 }
 
 PackedVector3Array PBAParticleSystem::get_positions() const {

@@ -1,5 +1,5 @@
 [gd_resource type="PBASoftTriangle" format=3 uid="uid://ymxum7o34m6d"]
 
 [resource]
-rest_area = 0.0
-spring_constant = 2.925938493e-315
+rest_area = 10.0
+spring_constant = 0.0
